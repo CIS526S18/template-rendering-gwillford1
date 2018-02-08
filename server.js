@@ -1,6 +1,5 @@
 const http = require('http');
 const fs = require('fs');
-const url = require('url');
 const qs = require('querystring');
 
 const PORT = 3000;
@@ -40,7 +39,7 @@ function studentList() {
   * @return {String} the html form
   */
 function studentForm() {
-  var form = "<form>";
+  var form = "<form method='POST'>";
   form +=    "  <fieldset>";
   form +=    "   <label for='name'>Student Name</label>";
   form +=    "   <input type='text' name='name'/>";
@@ -68,17 +67,32 @@ function studentForm() {
 function handleRequest(req, res) {
 
   // Check for form submittal
-  var uri = url.parse(req.url);
-  if(uri.search) {
-    var params = qs.parse(uri.search.slice(1));
+  if(req.method === "POST") {
+    var body = "";
 
-    if(params.name) {
+    // Handle incoming data - append it to 
+    // the body 
+    req.on('data', function(data) {
+      body += data;
+    });
+
+    // Once the entire body has loaded, parse the 
+    // student object out of it.
+    req.on('end', function(){
+      var student = qs.parse(body);
+
+      // TODO: Validate student object
+
+      // Save *sanitized* student object to cache
       students.push({
         name: escapeHTML(params.name),
         eid: escapeHTML(params.eid),
         description: escapeHTML(params.description)
       });
-    }
+      
+      // Save cache to hard drive
+      fs.writeFile('students.json', JSON.stringify(students));
+    });
   }
 
   // Render the page
