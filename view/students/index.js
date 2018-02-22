@@ -2,7 +2,7 @@ const studentList = require('./list');
 const studentForm = require('./form');
 
 function studentIndex(students) {
-  console.log(students);
+  
   // Render the page
   var html = "<!doctype html>";
   html +=    "  <html>";

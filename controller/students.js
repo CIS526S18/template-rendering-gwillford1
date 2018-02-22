@@ -1,13 +1,19 @@
 const studentIndex = require('../view/students/index');
 const studentModel = require('../model/students');
+const parseBody = require('../helpers/parse-body');
 
+/** @module controller/students
+  * The student controller.
+  */
 module.exports = {
   list: list,
   create: create
 }
 
 /** @function list
-  * Lists the students
+  * Lists the students currently saved in the app
+  * @param {http.IncomingRequest} req - the request object
+  * @param {http.ServerResponse} res - the response object
   */
 function list(req, res) {
   var students = studentModel.getStudents();
@@ -17,11 +23,25 @@ function list(req, res) {
 }
 
 /** @function create
-  * Creates a new student
+  * Creates a new student from the request body,
+  * and then renders the list of all students
+  * (including the new one)
+  * @param {http.IncomingRequest} req - the request object
+  * @param {http.ServerResponse} res - the response object
   */
 function create(req, res) {
-  // TODO:
   // 1) Parse the form content
-  // 2) Create new student from form content
-  // 3) Render the index with the new student
+  parseBody(req, res, function(req, res){
+    // 2) Create new student from form content
+    studentModel.addStudent(req.body, function(err){
+      if(err) {
+        console.error(err);
+        res.statusCode = 500;
+        res.end("Server error");
+        return;
+      }
+      // 3) Render the index with the new student
+      list(req, res);
+    });
+  });
 }

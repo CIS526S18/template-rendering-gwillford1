@@ -11,3 +11,10 @@ function escapeHTML(html) {
   // the regular expression /</g means "all < in the string"
   return html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+/** @module escape-html
+  * A module encapsulating a function that sanitizes
+  * html strings by replacing angle brackets (<>) with
+  * html greater than and less than symbols.
+  */
+module.exports = escapeHTML;

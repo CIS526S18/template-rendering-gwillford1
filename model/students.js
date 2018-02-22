@@ -1,9 +1,12 @@
 /* load dependencies */
 const fs = require('fs');
-const escapeHTML = require('../helpers/escapeHTML');
+const escapeHTML = require('../helpers/escape-html');
 
 // TODO: Add a removeStudent function
 
+/** @module model/students
+  * The student model
+  */
 module.exports = {
   getStudents: getStudents,
   addStudent: addStudent
@@ -38,10 +41,16 @@ function addStudent(student, callback) {
     eid: escapeHTML(student.eid),
     description: escapeHTML(student.description)
   }
-
   // TODO: validate the student object
 
+  // Add the student to the in-memory cache
   students.push(sanitizedStudent);
-  fs.writeFile('students.json', {encoding: 'utf-8'}, JSON.stringify(students));
-  callback(false, JSON.parse(JSON.stringify(sanitizedStudent)));
+  // Save the cache to persistent storage (our JSON file)
+  fs.writeFile('students.json', JSON.stringify(students), 'utf-8', function(err) {
+    // If there was an error writing the student
+    // to persistent storage, pass it along
+    if(err) return callback(err);
+    // Otherwise, trigger our callback with a clone of the student
+    callback(false, JSON.parse(JSON.stringify(sanitizedStudent)))
+  });
 }
