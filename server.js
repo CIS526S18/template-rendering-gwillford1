@@ -3,7 +3,7 @@ const fs = require('fs');
 const qs = require('querystring');
 const studentController = require('./controller/students');
 
-const PORT = 3000;
+const PORT = 3020;
 
 /** @function handleRequest
   * Handles requests to the webserver by rendering a page listing

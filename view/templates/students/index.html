@@ -1,0 +1,22 @@
+
+<!doctype html>
+ <html>
+    <head>
+    <title>Hello World</title>
+   </head>
+   <body>
+    <h1>
+        Hello World
+      </h1>
+      <%= params.students %>
+      <ul>
+        <%=
+          params.students.map(function(item) {
+          return "<li>" + item.name + "</li>";
+          }).join(""); 
+        %>
+      </ul>
+      <%= /*studentForm()*/ %>
+ </body>
+</html>
+

@@ -1,7 +1,7 @@
-const studentIndex = require('../view/students/index');
+
 const studentModel = require('../model/students');
 const parseBody = require('../helpers/parse-body');
-
+const view = require('../view/view.js');
 /** @module controller/students
   * The student controller.
   */
@@ -17,9 +17,17 @@ module.exports = {
   */
 function list(req, res) {
   var students = studentModel.getStudents();
-  var html = studentIndex(students);
-  res.setHeader('Content-Type', 'text/html');
-  res.end(html);
+  var html = view.render('students/index.html', {students: students}, function(err, html) {
+    if (err) {
+      res.statusCode = 500;
+      res.end("server error");
+      return;
+    }
+    res.setHeader('Content-Type', 'text/html')
+    res.end(html);
+  });
+
+  
 }
 
 /** @function create
