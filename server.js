@@ -1,9 +1,13 @@
 const http = require('http');
 const fs = require('fs');
 const qs = require('querystring');
+const view = require('./view/view');
 const studentController = require('./controller/students');
 
 const PORT = 3020;
+
+//Create the template cache
+view.cacheTemplates();
 
 /** @function handleRequest
   * Handles requests to the webserver by rendering a page listing
